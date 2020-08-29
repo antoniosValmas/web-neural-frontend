@@ -1,0 +1,20 @@
+<div class="container">
+  <div class="canvas-container">
+    <canvas #canvas></canvas>
+  </div>
+  <div class="actions-container">
+    <button
+      mat-button value="clear"
+      (click)="clear()"
+    >
+      Clear Selection
+    </button>
+    <button
+      mat-flat-button color="primary"
+      value="predict"
+      (click)="submit()"
+    >
+      Predict Number
+    </button>
+  </div>
+</div>
