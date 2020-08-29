@@ -109,18 +109,17 @@ export class CanvasComponent implements AfterViewInit {
   }
 
   public submit() {
-    Array(28).map((_, j) => {
-      return Array(28).map((_, i) => {
+    const image = [...Array(28).keys()].map((_, j) => {
+      return [...Array(28).keys()].map((_, i) => {
         return this.downSampleImage(
           this.cx.getImageData(i * 10, j * 10, 10, 10).data
         );
       });
     });
-    for (let j = 0; j < 28; j++) {
-      for (let i = 0; i < 28; i++) {
-        this.downSampleImage(this.cx.getImageData(i * 10, j * 10, 10, 10).data);
-      }
-    }
+
+    this.dataService.sendImageToPredict([image]).subscribe((data) => {
+      
+    });
   }
 
   public clear() {

@@ -8,7 +8,8 @@ import { environment } from 'src/environments/environment';
 export class DataService {
   constructor(private http: HttpClient) {}
 
-  sendImageToPredict(imgs: number[][][]) {
-    this.http.post(`${environment.baseURL}/neural-network/predice`, imgs);
+  sendImageToPredict(images: number[][][]) {
+    return this.http
+      .post(`/api/neural-network/predict`, { tests: images });
   }
 }

@@ -61,19 +61,30 @@
                   "maximumError": "10kb"
                 }
               ]
+            },
+            "development": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.dev.ts"
+                }
+              ]
             }
           }
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "web-neural-frontend:build"
+            "browserTarget": "web-neural-frontend:build",
+            "proxyConfig": "./proxy.conf.json"
           },
           "configurations": {
             "production": {
               "browserTarget": "web-neural-frontend:build:production"
             },
-            "dev": {}
+            "development": {
+              "browserTarget": "web-neural-frontend:build:development"
+            }
           }
         },
         "extract-i18n": {
