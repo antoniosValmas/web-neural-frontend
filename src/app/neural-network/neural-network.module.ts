@@ -14,8 +14,7 @@ import { CanvasModule } from '../canvas/canvas.module';
     CommonModule,
     MatButtonModule,
     MatIconModule,
-    MatDialogModule,
-    CanvasModule
+    MatDialogModule
   ]
 })
 export class NeuralNetworkModule { }

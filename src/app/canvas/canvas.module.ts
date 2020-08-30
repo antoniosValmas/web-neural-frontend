@@ -6,6 +6,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { CanvasService } from './canvas.service';
 import { CanvasComponent } from './canvas.component';
+import { SpinnerService } from '../spinner/spinner.service';
+import { NeuralNetworkService } from '../neural-network/neural-network.service';
 
 @NgModule({
   imports: [
@@ -16,6 +18,6 @@ import { CanvasComponent } from './canvas.component';
     MatCardModule,
   ],
   declarations: [CanvasComponent],
-  providers: [CanvasService],
+  providers: [CanvasService, SpinnerService, NeuralNetworkService],
 })
 export class CanvasModule {}

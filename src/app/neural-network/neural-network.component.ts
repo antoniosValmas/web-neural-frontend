@@ -11,7 +11,6 @@ import { NeuralNetworkService } from './neural-network.service';
 export class NeuralNetworkComponent implements OnInit {
 
   constructor(
-    public dialog: MatDialog,
     private neuralNetworkService: NeuralNetworkService
   ) { }
 
@@ -19,10 +18,7 @@ export class NeuralNetworkComponent implements OnInit {
   }
 
   public openTestModal() {
-    this.dialog.open(CanvasComponent, {
-      width: '400px',
-      maxHeight: '500px',
-    })
+    this.neuralNetworkService.openTestModal(CanvasComponent);
   }
 
   public train() {

@@ -6,8 +6,10 @@ import {
   Input,
 } from '@angular/core';
 import { fromEvent } from 'rxjs';
-import { switchMap, takeUntil, pairwise } from 'rxjs/operators';
+import { switchMap, takeUntil, pairwise, finalize } from 'rxjs/operators';
 import { CanvasService } from './canvas.service';
+import { SpinnerService } from '../spinner/spinner.service';
+import { NeuralNetworkService } from '../neural-network/neural-network.service';
 
 @Component({
   selector: 'app-canvas',
@@ -23,7 +25,11 @@ export class CanvasComponent implements AfterViewInit {
   private cx: CanvasRenderingContext2D;
   public result: number;
 
-  constructor(private canvasService: CanvasService) {}
+  constructor(
+    private canvasService: CanvasService,
+    private spinnerService: SpinnerService,
+    private neuralNetworkService: NeuralNetworkService
+  ) {}
 
   ngAfterViewInit(): void {
     // get the context
@@ -108,16 +114,25 @@ export class CanvasComponent implements AfterViewInit {
 
   // Submit image for prediction
   public submit() {
-    this.canvasService.sendImagesToPredict(this.cx.canvas.toDataURL()).subscribe((data) => {
-      this.result = data["labels"][0];
-    });
+    this.neuralNetworkService.closeTestModal();
+    this.spinnerService.setLoading(true);
+    this.canvasService
+      .sendImagesToPredict(this.cx.canvas.toDataURL())
+      .pipe(
+        finalize(() => {
+          this.spinnerService.setLoading(false);
+        })
+      )
+      .subscribe((data) => {
+        this.result = data['labels'][0];
+      });
   }
 
   // Clear canvas and image selection
   public clear() {
     this.cx.clearRect(0, 0, this.width, this.height);
     this.cx.fillStyle = '#fff';
-    this.cx.fillRect(0, 0, this.width, this.height)
+    this.cx.fillRect(0, 0, this.width, this.height);
   }
 
   // User selects a file to upload
@@ -129,11 +144,10 @@ export class CanvasComponent implements AfterViewInit {
     img.onload = () => {
       this.clear();
       this.cx.drawImage(img, 0, 0, 280, 280);
-    }
+    };
     reader.onload = (ev) => {
       img.src = ev.target.result as string;
-    }
+    };
     reader.readAsDataURL(inputElement.files[0]);
-    
   }
 }

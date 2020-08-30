@@ -1,0 +1,12 @@
+.backdrop {
+  background-color: rgba($color: #fff, $alpha: 0.5);
+}
+.backdrop, mat-spinner {
+  z-index: 2000;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+}
