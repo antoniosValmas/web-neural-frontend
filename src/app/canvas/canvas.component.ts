@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { fromEvent } from 'rxjs';
 import { switchMap, takeUntil, pairwise } from 'rxjs/operators';
-import { DataService } from '../services/data.service';
+import { CanvasService } from './canvas.service';
 
 @Component({
   selector: 'app-canvas',
@@ -21,8 +21,9 @@ export class CanvasComponent implements AfterViewInit {
   @Input() public height = 280;
 
   private cx: CanvasRenderingContext2D;
+  public result: number;
 
-  constructor(private dataService: DataService) {}
+  constructor(private canvasService: CanvasService) {}
 
   ngAfterViewInit(): void {
     // get the context
@@ -37,6 +38,7 @@ export class CanvasComponent implements AfterViewInit {
     this.cx.lineWidth = 15;
     this.cx.lineCap = 'round';
     this.cx.strokeStyle = '#000';
+    this.clear();
 
     // we'll implement this method to start capturing mouse events
     this.captureEvents(canvasEl);
@@ -104,25 +106,34 @@ export class CanvasComponent implements AfterViewInit {
     }
   }
 
-  private downSampleImage(imageData: Uint8ClampedArray): number {
-    return imageData.reduce((sum, val) => sum + val) / (imageData.length / 4);
-  }
-
+  // Submit image for prediction
   public submit() {
-    const image = [...Array(28).keys()].map((_, j) => {
-      return [...Array(28).keys()].map((_, i) => {
-        return this.downSampleImage(
-          this.cx.getImageData(i * 10, j * 10, 10, 10).data
-        );
-      });
-    });
-
-    this.dataService.sendImageToPredict([image]).subscribe((data) => {
-      
+    this.canvasService.sendImagesToPredict(this.cx.canvas.toDataURL()).subscribe((data) => {
+      this.result = data["labels"][0];
     });
   }
 
+  // Clear canvas and image selection
   public clear() {
     this.cx.clearRect(0, 0, this.width, this.height);
+    this.cx.fillStyle = '#fff';
+    this.cx.fillRect(0, 0, this.width, this.height)
+  }
+
+  // User selects a file to upload
+  public onFileSelected() {
+    const inputElement = document.getElementById('file') as HTMLInputElement;
+    const reader = new FileReader();
+    const img = new Image();
+
+    img.onload = () => {
+      this.clear();
+      this.cx.drawImage(img, 0, 0, 280, 280);
+    }
+    reader.onload = (ev) => {
+      img.src = ev.target.result as string;
+    }
+    reader.readAsDataURL(inputElement.files[0]);
+    
   }
 }

@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { CanvasComponent } from './canvas/canvas.component';
+import { NeuralNetworkComponent } from './neural-network/neural-network.component';
 
 const routes: Routes = [
-  { path: 'canvas', component: CanvasComponent }
+  { path: 'neural-network', component: NeuralNetworkComponent }
 ];
 
 @NgModule({

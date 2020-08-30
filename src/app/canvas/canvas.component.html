@@ -1,20 +1,32 @@
 <div class="container">
-  <div class="canvas-container">
-    <canvas #canvas></canvas>
-  </div>
+  <mat-card class="input-container">
+    <div class="canvas-container">
+      <p class="title">Draw a number</p>
+      <canvas #canvas></canvas>
+    </div>
+    <div class="divider">
+      <mat-divider></mat-divider>
+      <small class="text">OR</small>
+      <mat-divider></mat-divider>
+    </div>
+    <div class="image-upload">
+      <button
+        mat-flat-button
+        color="primary"
+        value="upload"
+        (click)="fileInput.click()"
+      >
+        <span class="text">Upload Image</span>
+        <mat-icon>folder</mat-icon>
+        <input #fileInput id="file" class="hidden" type="file" name="uploadedImage" (change)="onFileSelected()" />
+      </button>
+    </div>
+  </mat-card>
   <div class="actions-container">
-    <button
-      mat-button value="clear"
-      (click)="clear()"
-    >
-      Clear Selection
-    </button>
-    <button
-      mat-flat-button color="primary"
-      value="predict"
-      (click)="submit()"
-    >
+    <button mat-button value="clear" (click)="clear()">Clear Selection</button>
+    <button mat-flat-button color="primary" value="predict" (click)="submit()">
       Predict Number
     </button>
   </div>
+  <div>{{result}}</div>
 </div>

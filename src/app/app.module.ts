@@ -4,24 +4,22 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { CanvasComponent } from './canvas/canvas.component';
+import { CanvasModule } from './canvas/canvas.module';
+import { NeuralNetworkModule } from './neural-network/neural-network.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatButtonModule } from '@angular/material/button'
-import { DataService } from './services/data.service'
 
 @NgModule({
   declarations: [
-    AppComponent,
-    CanvasComponent
+    AppComponent
   ],
   imports: [
+    CanvasModule,
+    NeuralNetworkModule,
     HttpClientModule,
     BrowserModule,
     AppRoutingModule,
-    BrowserAnimationsModule,
-    MatButtonModule
+    BrowserAnimationsModule
   ],
-  providers: [DataService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
