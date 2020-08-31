@@ -1,31 +1,55 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { SpinnerService } from '../spinner/spinner.service';
+import { finalize } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
+import { PredictResponse } from './canvas.types';
 
 @Injectable()
 export class CanvasService {
-  constructor(private http: HttpClient) {}
+  private predictionsObservable: BehaviorSubject<number[][]>;
+  private labelsObservable: BehaviorSubject<number[]>;
+  private imagesURLObservable: BehaviorSubject<string[]>;
 
-  // Since image is in grey scale.
-  // We should grey scale the image and then subtract brightness from the alpha value
-  downSampleImage(imageData: Uint8ClampedArray): number {
-    return (
-      imageData.reduce((sum, val, index) => {
-        switch (index % 4) {
-          case 0:
-            return sum - 0.34 * val;
-          case 1:
-            return sum - 0.5 * val;
-          case 2:
-            return sum - 0.16 * val;
-          case 3:
-            return sum + val;
-        }
-      }) / (imageData.length / 4)
-    );
+  constructor(
+    private http: HttpClient,
+    private spinnerService: SpinnerService,
+  ) {
+    this.predictionsObservable = new BehaviorSubject<number[][]>([]);
+    this.labelsObservable = new BehaviorSubject<number[]>([]);
+    this.imagesURLObservable = new BehaviorSubject<string[]>([]);
   }
 
   // Send images to backend to predict the numbers
   sendImagesToPredict(url: string) {
-    return this.http.post(`/api/neural-network/predict`, { url });
+    this.spinnerService.setLoading(true);
+    this.imagesURLObservable.next([url]);
+    return this.http
+      .post<PredictResponse>(`/api/neural-network/predict`, { url })
+      .pipe(
+        finalize(() => {
+          this.spinnerService.setLoading(false);
+        })
+      );
+  }
+
+  public get predictions() {
+    return this.predictionsObservable.asObservable();
+  }
+
+  public get labels() {
+    return this.labelsObservable.asObservable();
+  }
+
+  public get imagesURL() {
+    return this.imagesURLObservable.asObservable();
+  }
+
+  public setPredictions(predictions: number[][]) {
+    return this.predictionsObservable.next(predictions);
+  }
+
+  public setLabels(labels: number[]) {
+    return this.labelsObservable.next(labels);
   }
 }

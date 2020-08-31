@@ -8,6 +8,7 @@ import { CanvasService } from './canvas.service';
 import { CanvasComponent } from './canvas.component';
 import { SpinnerService } from '../spinner/spinner.service';
 import { NeuralNetworkService } from '../neural-network/neural-network.service';
+import { StatisticsService } from '../statistics/statistics.service';
 
 @NgModule({
   imports: [

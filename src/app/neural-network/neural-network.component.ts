@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { Component } from '@angular/core';
 import { CanvasComponent } from '../canvas/canvas.component';
 import { NeuralNetworkService } from './neural-network.service';
 
@@ -8,23 +7,18 @@ import { NeuralNetworkService } from './neural-network.service';
   templateUrl: './neural-network.component.html',
   styleUrls: ['./neural-network.component.scss']
 })
-export class NeuralNetworkComponent implements OnInit {
+export class NeuralNetworkComponent{
 
   constructor(
     private neuralNetworkService: NeuralNetworkService
   ) { }
 
-  ngOnInit(): void {
-  }
-
   public openTestModal() {
-    this.neuralNetworkService.openTestModal(CanvasComponent);
+    this.neuralNetworkService.openModal(CanvasComponent);
   }
 
   public train() {
-    this.neuralNetworkService.train().subscribe((data) => {
-      console.log(data);
-    })
+    this.neuralNetworkService.train().subscribe();
   }
 
 }

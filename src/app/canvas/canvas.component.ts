@@ -1,15 +1,9 @@
-import {
-  Component,
-  AfterViewInit,
-  ViewChild,
-  ElementRef,
-  Input,
-} from '@angular/core';
+import { Component, AfterViewInit, Input } from '@angular/core';
 import { fromEvent } from 'rxjs';
-import { switchMap, takeUntil, pairwise, finalize } from 'rxjs/operators';
+import { switchMap, takeUntil, pairwise } from 'rxjs/operators';
 import { CanvasService } from './canvas.service';
-import { SpinnerService } from '../spinner/spinner.service';
 import { NeuralNetworkService } from '../neural-network/neural-network.service';
+import { StatisticsComponent } from '../statistics/statistics.component';
 
 @Component({
   selector: 'app-canvas',
@@ -17,24 +11,28 @@ import { NeuralNetworkService } from '../neural-network/neural-network.service';
   styleUrls: ['./canvas.component.scss'],
 })
 export class CanvasComponent implements AfterViewInit {
-  @ViewChild('canvas') public canvas: ElementRef;
-
   @Input() public width = 280;
   @Input() public height = 280;
 
-  private cx: CanvasRenderingContext2D;
-  public result: number;
+  private cx: CanvasRenderingContext2D | null = null;
 
   constructor(
     private canvasService: CanvasService,
-    private spinnerService: SpinnerService,
     private neuralNetworkService: NeuralNetworkService
   ) {}
 
   ngAfterViewInit(): void {
     // get the context
-    const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
-    this.cx = canvasEl.getContext('2d');
+    const canvasEl = document.getElementById(
+      'draw-canvas'
+    ) as HTMLCanvasElement;
+
+    const canvasContext = canvasEl.getContext('2d');
+    if (!canvasContext) {
+      console.error("Couldn't get 2d context.");
+      return;
+    }
+    this.cx = canvasContext;
 
     // set the width and height
     canvasEl.width = this.width;
@@ -52,11 +50,11 @@ export class CanvasComponent implements AfterViewInit {
 
   private captureEvents(canvasEl: HTMLCanvasElement) {
     // this will capture all mousedown events from the canvas element
-    fromEvent(canvasEl, 'mousedown')
+    fromEvent<MouseEvent>(canvasEl, 'mousedown')
       .pipe(
         switchMap((e) => {
           // after a mouse down, we'll record all mouse moves
-          return fromEvent(canvasEl, 'mousemove').pipe(
+          return fromEvent<MouseEvent>(canvasEl, 'mousemove').pipe(
             // we'll stop (and unsubscribe) once the user releases the mouse
             // this will trigger a 'mouseup' event
             takeUntil(fromEvent(canvasEl, 'mouseup')),
@@ -114,25 +112,33 @@ export class CanvasComponent implements AfterViewInit {
 
   // Submit image for prediction
   public submit() {
-    this.neuralNetworkService.closeTestModal();
-    this.spinnerService.setLoading(true);
+    if (!this.cx) {
+      console.error('Canvas is not initialized.');
+      return;
+    }
+
+    this.neuralNetworkService.closeAllModals();
     this.canvasService
       .sendImagesToPredict(this.cx.canvas.toDataURL())
-      .pipe(
-        finalize(() => {
-          this.spinnerService.setLoading(false);
-        })
-      )
       .subscribe((data) => {
-        this.result = data['labels'][0];
+        this.canvasService.setPredictions(data.predictions);
+        this.canvasService.setLabels(data.labels);
+        this.neuralNetworkService.openModal(StatisticsComponent);
       });
   }
 
   // Clear canvas and image selection
   public clear() {
+    if (!this.cx) {
+      console.error('Canvas is not initialized.');
+      return;
+    }
+
     this.cx.clearRect(0, 0, this.width, this.height);
     this.cx.fillStyle = '#fff';
     this.cx.fillRect(0, 0, this.width, this.height);
+    const inputElement = document.getElementById('file') as HTMLInputElement;
+    inputElement.value = '';
   }
 
   // User selects a file to upload
@@ -142,12 +148,25 @@ export class CanvasComponent implements AfterViewInit {
     const img = new Image();
 
     img.onload = () => {
+      if (!this.cx) {
+        console.error('Canvas is not initialized.');
+        return;
+      }
+
       this.clear();
       this.cx.drawImage(img, 0, 0, 280, 280);
     };
     reader.onload = (ev) => {
+      if (!ev || !ev.target) {
+        console.error("Image couldn't be processed.");
+        return;
+      }
       img.src = ev.target.result as string;
     };
+    if (!inputElement.files) {
+      console.error('No files were added.');
+      return;
+    }
     reader.readAsDataURL(inputElement.files[0]);
   }
 }

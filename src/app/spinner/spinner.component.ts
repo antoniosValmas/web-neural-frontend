@@ -12,7 +12,7 @@ export class SpinnerComponent {
   constructor(
     private spinnerService: SpinnerService
   ) {
-    spinnerService.getLoading().subscribe((loading) => {
+    spinnerService.loading.subscribe((loading) => {
       this.loading = loading;
     })
   }

@@ -1,4 +1,4 @@
-import { Injectable, Component } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { ComponentType } from '@angular/cdk/portal';
@@ -15,14 +15,15 @@ export class NeuralNetworkService {
     return this.http.post('/api/neural-network/train', {})
   }
 
-  public openTestModal<T>(component: ComponentType<T>) {
+  public openModal<T>(component: ComponentType<T>) {
     this.dialog.open(component, {
       width: '400px',
       maxHeight: '500px',
     })
   }
 
-  public closeTestModal() {
-    this.dialog.closeAll()
+  public closeAllModals() {
+    this.dialog.closeAll();
   }
+
 }

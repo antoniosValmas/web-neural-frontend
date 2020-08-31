@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { CanvasModule } from './canvas/canvas.module';
 import { SpinnerModule } from './spinner/spinner.module';
 import { NeuralNetworkModule } from './neural-network/neural-network.module';
+import { StatisticsModule } from './statistics/statistics.module';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { NeuralNetworkModule } from './neural-network/neural-network.module';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    SpinnerModule
+    SpinnerModule,
+    StatisticsModule
   ],
   bootstrap: [AppComponent]
 })

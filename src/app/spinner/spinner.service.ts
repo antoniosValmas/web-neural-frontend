@@ -14,7 +14,7 @@ export class SpinnerService {
     this.loadingObservable.next(loading);
   }
 
-  public getLoading() {
-    return this.loadingObservable;
+  public get loading() {
+    return this.loadingObservable.asObservable();
   }
 }
