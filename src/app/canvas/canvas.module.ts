@@ -8,7 +8,7 @@ import { CanvasService } from './canvas.service';
 import { CanvasComponent } from './canvas.component';
 import { SpinnerService } from '../spinner/spinner.service';
 import { NeuralNetworkService } from '../neural-network/neural-network.service';
-import { StatisticsService } from '../statistics/statistics.service';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   imports: [
@@ -17,6 +17,7 @@ import { StatisticsService } from '../statistics/statistics.service';
     MatFormFieldModule,
     MatIconModule,
     MatCardModule,
+    MatDialogModule
   ],
   declarations: [CanvasComponent],
   providers: [CanvasService, SpinnerService, NeuralNetworkService],

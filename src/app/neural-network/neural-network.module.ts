@@ -5,7 +5,6 @@ import { NeuralNetworkService } from './neural-network.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
-import { CanvasModule } from '../canvas/canvas.module';
 
 @NgModule({
   declarations: [NeuralNetworkComponent],

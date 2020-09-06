@@ -1,9 +1,10 @@
 import { Component, AfterViewInit, Input } from '@angular/core';
-import { fromEvent } from 'rxjs';
+import { fromEvent, Observable, merge } from 'rxjs';
 import { switchMap, takeUntil, pairwise } from 'rxjs/operators';
 import { CanvasService } from './canvas.service';
 import { NeuralNetworkService } from '../neural-network/neural-network.service';
 import { StatisticsComponent } from '../statistics/statistics.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-canvas',
@@ -49,39 +50,63 @@ export class CanvasComponent implements AfterViewInit {
   }
 
   private captureEvents(canvasEl: HTMLCanvasElement) {
+    // Initialize mouse start and touch start event observables
+    const mouseDown = fromEvent<MouseEvent>(canvasEl, 'mousedown');
+    const touchStart = fromEvent<TouchEvent>(canvasEl, 'touchstart')
     // this will capture all mousedown events from the canvas element
-    fromEvent<MouseEvent>(canvasEl, 'mousedown')
+    merge(mouseDown, touchStart)
       .pipe(
         switchMap((e) => {
+          // Initialize mouse start and mouse move and touch move event observables
+          const mouseMove = fromEvent<MouseEvent>(canvasEl, 'mousemove');
+          const touchMove = fromEvent<TouchEvent>(canvasEl, 'touchmove')
           // after a mouse down, we'll record all mouse moves
-          return fromEvent<MouseEvent>(canvasEl, 'mousemove').pipe(
+          return merge(mouseMove, touchMove).pipe(
             // we'll stop (and unsubscribe) once the user releases the mouse
             // this will trigger a 'mouseup' event
             takeUntil(fromEvent(canvasEl, 'mouseup')),
             // we'll also stop (and unsubscribe) once the mouse leaves the canvas (mouseleave event)
             takeUntil(fromEvent(canvasEl, 'mouseleave')),
+            // stop when touch stops
+            takeUntil(fromEvent(canvasEl, 'touchend')),
             // pairwise lets us get the previous value to draw a line from
             // the previous point to the current point
             pairwise()
           );
         })
       )
-      .subscribe((res: [MouseEvent, MouseEvent]) => {
+      .subscribe((res: [MouseEvent | TouchEvent, MouseEvent | TouchEvent]) => {
         const rect = canvasEl.getBoundingClientRect();
 
+        const positions = {
+          prevPos: { x: 0, y: 0 },
+          currentPos: { x: 0, y: 0 },
+        }
         // previous and current position with the offset
-        const prevPos = {
-          x: res[0].clientX - rect.left,
-          y: res[0].clientY - rect.top,
-        };
+        if (res[0] instanceof MouseEvent && res[1] instanceof MouseEvent) {
+          positions.prevPos = {
+            x: res[0].clientX - rect.left,
+            y: res[0].clientY - rect.top,
+          };
 
-        const currentPos = {
-          x: res[1].clientX - rect.left,
-          y: res[1].clientY - rect.top,
-        };
+          positions.currentPos = {
+            x: res[1].clientX - rect.left,
+            y: res[1].clientY - rect.top,
+          }
+        } else if (res[0] instanceof TouchEvent && res[1] instanceof TouchEvent) {
+          positions.prevPos = {
+            x: res[0].touches[0].clientX - rect.left,
+            y: res[0].touches[0].clientY - rect.top,
+          };
+
+          positions.currentPos = {
+            x: res[1].touches[0].clientX - rect.left,
+            y: res[1].touches[0].clientY - rect.top,
+          };
+        }
 
         // this method we'll implement soon to do the actual drawing
-        this.drawOnCanvas(prevPos, currentPos);
+        this.drawOnCanvas(positions.prevPos, positions.currentPos);
       });
   }
 

@@ -1,55 +1,71 @@
+.close-button {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
 .container {
   width: 100%;
   height: 100%;
 
-  .input-container {
+  .canvas-container {
+    width: 282px;
+    margin: 0 auto 20px;
 
-    .canvas-container {
-      width: 282px;
-      margin: 0 auto 20px;
-  
-      .title {
-        text-align: center;
-        margin: 10px 0;
-      }
-  
-      canvas {
-        margin: auto;
-        border: 1px solid black;
-      }
+    .title {
+      text-align: center;
+      margin: 10px 0;
     }
-  
-    .divider {
-      display: flex;
-      justify-content: space-between;
-  
-      .mat-divider {
-        position: static;
-        border-color: black;
-        width: 100%;
-        height: 0;
-        margin: auto 10px;
-      }
-    }
-  
-    .image-upload {
-      margin: 20px 0;
-      display: flex;
-      justify-content: center;
-  
-      button {
-        width: 282px;
-  
-        .text {
-          margin-right: 20px;
-        }
-      }
+
+    canvas {
+      touch-action: none;
+      margin: auto;
+      border: 1px solid black;
     }
   }
 
-  .actions-container {
-    margin: 40px auto 0;
+  .divider {
+    width: 282px;
+    margin: 0 auto;
     display: flex;
     justify-content: space-between;
+
+    .mat-divider {
+      position: static;
+      border-color: black;
+      width: 100%;
+      height: 0;
+      margin: auto 10px auto 0
+    }
+
+    .mat-divider:last-child {
+      margin: auto 0 auto 10px;
+    }
+  }
+
+  .image-upload {
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+
+    button {
+      width: 282px;
+
+      .text {
+        margin-right: 20px;
+      }
+    }
+  }
+}
+
+.actions-container {
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+}
+
+@media (max-width: 600px) {
+  .close-button {
+    display: block;
   }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, DialogPosition } from '@angular/material/dialog';
 import { ComponentType } from '@angular/cdk/portal';
 
 @Injectable()
@@ -17,8 +17,7 @@ export class NeuralNetworkService {
 
   public openModal<T>(component: ComponentType<T>) {
     this.dialog.open(component, {
-      width: '400px',
-      maxHeight: '500px',
+      panelClass: 'custom-dialog'
     })
   }
 

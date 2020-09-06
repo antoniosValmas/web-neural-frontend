@@ -6,3 +6,28 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .hidden {
   display: none;
 }
+
+.custom-dialog {
+  position: relative !important;
+  width: 400px;
+  height: 500px;
+
+  .mat-dialog-container {
+    padding-bottom: 0;
+    
+    .mat-dialog-title {
+      margin-bottom: 10px;
+    }
+
+    .mat-dialog-content {
+      max-height: calc(100% - 112px);
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .custom-dialog {
+    min-width: 100vw !important;
+    min-height: 100vh !important;
+  }
+}
