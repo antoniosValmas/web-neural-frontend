@@ -18,10 +18,18 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     .mat-dialog-title {
       margin-bottom: 10px;
     }
+  }
+}
 
-    .mat-dialog-content {
-      max-height: calc(100% - 112px);
-    }
+.testing-dialog {
+  .mat-dialog-content {
+    max-height: calc(100% - 112px);
+  }
+}
+
+.statistics-dialog {
+  .mat-dialog-content {
+    height: 100%;
   }
 }
 

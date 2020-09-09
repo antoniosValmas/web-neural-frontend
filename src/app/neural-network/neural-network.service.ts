@@ -7,17 +7,15 @@ import { ComponentType } from '@angular/cdk/portal';
 export class NeuralNetworkService {
 
   constructor(
-    public dialog: MatDialog,
-    private http: HttpClient
+    public dialog: MatDialog
   ) { }
 
-  public train() {
-    return this.http.post('/api/neural-network/train', {})
-  }
-
-  public openModal<T>(component: ComponentType<T>) {
+  public openModal<T>(component: ComponentType<T>, classes: string[]) {
     this.dialog.open(component, {
-      panelClass: 'custom-dialog'
+      panelClass: [
+        'custom-dialog',
+        ...classes
+      ]
     })
   }
 

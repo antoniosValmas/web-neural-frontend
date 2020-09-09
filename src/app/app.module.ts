@@ -9,10 +9,11 @@ import { CanvasModule } from './canvas/canvas.module';
 import { SpinnerModule } from './spinner/spinner.module';
 import { NeuralNetworkModule } from './neural-network/neural-network.module';
 import { StatisticsModule } from './statistics/statistics.module';
+import { TrainModule } from './train/train.module';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     CanvasModule,
@@ -22,7 +23,8 @@ import { StatisticsModule } from './statistics/statistics.module';
     AppRoutingModule,
     BrowserAnimationsModule,
     SpinnerModule,
-    StatisticsModule
+    StatisticsModule,
+    TrainModule
   ],
   bootstrap: [AppComponent]
 })

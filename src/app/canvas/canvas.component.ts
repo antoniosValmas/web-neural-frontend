@@ -148,7 +148,7 @@ export class CanvasComponent implements AfterViewInit {
       .subscribe((data) => {
         this.canvasService.setPredictions(data.predictions);
         this.canvasService.setLabels(data.labels);
-        this.neuralNetworkService.openModal(StatisticsComponent);
+        this.neuralNetworkService.openModal(StatisticsComponent, ['statistics-dialog']);
       });
   }
 

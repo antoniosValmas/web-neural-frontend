@@ -1,0 +1,22 @@
+<button class="close-button" mat-icon-button mat-dialog-close>
+  <mat-icon>close</mat-icon>
+</button>
+<h3 class="title" mat-dialog-title>AI training configuration</h3>
+<div class="container" mat-dialog-content>
+  <form class="train-form">
+    <div class="checkbox">
+      <mat-checkbox class="checkpoint-checkbox" name="checkpoint-checkbox" [(ngModel)]="fromCheckpoint">
+        Resume from checkpoint
+      </mat-checkbox>
+    </div>
+    <div>
+      <mat-form-field matNativeControl class="example-full-width">
+        <mat-label>Number of epochs</mat-label>
+        <input matInput type="number" name="epochs" [(ngModel)]="epochs">
+      </mat-form-field>
+    </div>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-flat-button color="primary" value="train" (click)="submit()">Continue</button>
+</div>

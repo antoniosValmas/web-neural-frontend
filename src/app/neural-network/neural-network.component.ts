@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CanvasComponent } from '../canvas/canvas.component';
 import { NeuralNetworkService } from './neural-network.service';
+import { TrainComponent } from '../train/train.component';
 
 @Component({
   selector: 'app-neural-network',
@@ -14,11 +15,11 @@ export class NeuralNetworkComponent{
   ) { }
 
   public openTestModal() {
-    this.neuralNetworkService.openModal(CanvasComponent);
+    this.neuralNetworkService.openModal(CanvasComponent, ['testing-dialog']);
   }
 
-  public train() {
-    this.neuralNetworkService.train().subscribe();
+  public openTrainModal() {
+    this.neuralNetworkService.openModal(TrainComponent, ['train-dialog']);
   }
 
 }

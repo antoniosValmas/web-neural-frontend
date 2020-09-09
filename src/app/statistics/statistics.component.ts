@@ -28,6 +28,4 @@ export class StatisticsComponent {
       this.imagesURL = url;
     });
   }
-
-
 }

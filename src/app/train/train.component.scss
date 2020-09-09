@@ -1,0 +1,14 @@
+.close-button {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+
+
+@media (max-width: 600px) {
+  .close-button {
+    display: block;
+  }
+}
