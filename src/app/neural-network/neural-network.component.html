@@ -1,4 +1,32 @@
 <div class="container">
+  <mat-form-field matNativeControl>
+    <mat-label>Choose a checkpoint</mat-label>
+    <mat-select>
+      <mat-optgroup *ngFor="let model of checkpoints" [label]="model.model_name + '(id: ' + model.model_id + ')'" >
+        <mat-option
+          *ngFor="let checkpoint of model.checkpoints"
+          [value]="checkpoint.checkpoint_id"
+          (onSelectionChange)="onSelectionChange($event, model.model_id, checkpoint.checkpoint_id)"
+        >
+          Id: {{checkpoint.checkpoint_id}}, Acc: {{checkpoint.accuracy}} {{checkpoint.created_at}}
+        </mat-option>
+        <mat-option
+          [value]="-1"
+          *ngIf="model.checkpoints.length === 0"
+          (onSelectionChange)="onSelectionChange($event, model.model_id)"
+        >
+          No Checkpoints
+        </mat-option>
+      </mat-optgroup>
+      <mat-option
+        *ngIf="checkpoints.length === 0"
+        [value]="-1"
+        (onSelectionChange)="onSelectionChange($event)"
+      >
+        No models loaded
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
   <button
     mat-flat-button
     color="primary"

@@ -2,6 +2,7 @@
   <mat-icon>close</mat-icon>
 </button>
 <h3 class="title" mat-dialog-title>Prediction Statistics</h3>
+<small>Choose the correct answer</small>
 <div class="container" mat-dialog-content>
   <mat-card *ngFor="let prediction of predictions; let i = index" class="stats">
     <img src="{{ imagesURL[i] }}" />
@@ -11,10 +12,15 @@
         *ngFor="let value of prediction; let label = index"
         [style.height]="value * 100 + '%'"
         [style.margin-top]="100 - value * 100 + 'px'"
+        (click)="correctLabels[i] = label"
+        [ngClass]="{'active': correctLabels[i] === label}"
       >
         <span class="value">{{(value * 100).toFixed(0) + '%'}}</span>
         <span class="label">{{label}}</span>
       </div>
     </div>
   </mat-card>
+</div>
+<div mat-dialog-actions class="actions-container" >
+  <button mat-flat-button color="primary" (click)="submitAnswers()">Continue</button>
 </div>

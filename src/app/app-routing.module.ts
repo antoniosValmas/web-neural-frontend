@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { NeuralNetworkComponent } from './neural-network/neural-network.component';
 
 const routes: Routes = [
-  { path: 'neural-network', component: NeuralNetworkComponent }
+  { path: 'model', component: NeuralNetworkComponent }
 ];
 
 @NgModule({

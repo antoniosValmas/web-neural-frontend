@@ -10,7 +10,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .custom-dialog {
   position: relative !important;
   width: 400px;
-  height: 500px;
+  height: 600px;
 
   .mat-dialog-container {
     padding-bottom: 0;
@@ -30,6 +30,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .statistics-dialog {
   .mat-dialog-content {
     height: 100%;
+    max-height: calc(100% - 129px);
   }
 }
 
