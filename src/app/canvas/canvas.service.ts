@@ -25,7 +25,7 @@ export class CanvasService {
     this.spinnerService.setLoading(true);
     this.imagesURLObservable.next([url]);
     return this.http
-      .post<PredictResponse>(`/api/neural-network/predict`, { url })
+      .post<PredictResponse>(`/api/models/4/predict`, { url })
       .pipe(
         finalize(() => {
           this.spinnerService.setLoading(false);

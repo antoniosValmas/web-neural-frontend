@@ -11,7 +11,7 @@ export class TrainService {
   ) { }
 
   public train(fromCheckpoint: boolean, epochs: number) {
-    return this.http.post('/api/neural-network/train', {
+    return this.http.post('/api/models/4/train', {
       fromCheckpoint,
       epochs,
     })
