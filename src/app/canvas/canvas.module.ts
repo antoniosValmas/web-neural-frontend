@@ -4,11 +4,10 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { CanvasService } from './canvas.service';
 import { CanvasComponent } from './canvas.component';
-import { SpinnerService } from '../spinner/spinner.service';
-import { NeuralNetworkService } from '../neural-network/neural-network.service';
+import { SpinnerService } from '../services/spinner.service';
 import { MatDialogModule } from '@angular/material/dialog';
+import { ModelsService } from '../services/models.service';
 
 @NgModule({
   imports: [
@@ -20,6 +19,6 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatDialogModule
   ],
   declarations: [CanvasComponent],
-  providers: [CanvasService, SpinnerService, NeuralNetworkService],
+  providers: [SpinnerService, ModelsService],
 })
 export class CanvasModule {}

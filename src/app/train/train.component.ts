@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TrainService } from './train.service';
+import { ModelsService } from '../services/models.service';
 
 @Component({
   selector: 'app-train',
@@ -11,11 +11,11 @@ export class TrainComponent {
   public epochs = 5;
 
   constructor(
-    public trainService: TrainService,
+    public modelsService: ModelsService,
   ) { }
 
   public submit() {
-    this.trainService.train(
+    this.modelsService.train(
       this.fromCheckpoint,
       this.epochs,
     ).subscribe();

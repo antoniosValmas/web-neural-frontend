@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
-import { CanvasService } from '../canvas/canvas.service';
-import { ThrowStmt } from '@angular/compiler';
-import { NeuralNetworkService } from '../neural-network/neural-network.service';
-import { StatisticsService } from './statistics.service';
+import { DialogService } from '../services/dialog.service';
+import { ModelsService } from '../services/models.service';
 
 @Component({
   selector: 'app-statistics',
@@ -16,15 +14,14 @@ export class StatisticsComponent {
   public correctLabels: number[] = [];
 
   constructor(
-    private neuralNetworkService: NeuralNetworkService,
-    private canvasService: CanvasService,
-    private statisticsService: StatisticsService
+    private dialogService: DialogService,
+    private modelsService: ModelsService
   ) {
     this.initializeObservables();
   }
 
   private initializeObservables() {
-    this.canvasService.predictions.subscribe((predictions) => {
+    this.modelsService.predictions.subscribe((predictions) => {
       this.predictions = predictions;
       this.correctLabels = this.predictions.map((prediction) => {
         return prediction.reduce(
@@ -36,17 +33,17 @@ export class StatisticsComponent {
       console.log(this.correctLabels);
     });
 
-    this.canvasService.labels.subscribe((labels) => {
+    this.modelsService.labels.subscribe((labels) => {
       this.labels = labels;
     });
 
-    this.canvasService.imagesURL.subscribe((url) => {
+    this.modelsService.imagesURL.subscribe((url) => {
       this.imagesURL = url;
     });
   }
 
   public submitAnswers() {
-    this.neuralNetworkService.closeAllModals();
-    this.statisticsService.trainUserInput(this.imagesURL, this.correctLabels).subscribe();
+    this.dialogService.closeAllModals();
+    this.modelsService.trainUserInput(this.imagesURL, this.correctLabels).subscribe();
   }
 }

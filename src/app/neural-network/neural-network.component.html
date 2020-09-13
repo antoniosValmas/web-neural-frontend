@@ -2,7 +2,7 @@
   <mat-form-field matNativeControl>
     <mat-label>Choose a checkpoint</mat-label>
     <mat-select>
-      <mat-optgroup *ngFor="let model of checkpoints" [label]="model.model_name + '(id: ' + model.model_id + ')'" >
+      <mat-optgroup *ngFor="let model of checkpointsPerModel" [label]="model.model_name + '(id: ' + model.model_id + ')'" >
         <mat-option
           *ngFor="let checkpoint of model.checkpoints"
           [value]="checkpoint.checkpoint_id"
@@ -19,7 +19,7 @@
         </mat-option>
       </mat-optgroup>
       <mat-option
-        *ngIf="checkpoints.length === 0"
+        *ngIf="checkpointsPerModel.length === 0"
         [value]="-1"
         (onSelectionChange)="onSelectionChange($event)"
       >

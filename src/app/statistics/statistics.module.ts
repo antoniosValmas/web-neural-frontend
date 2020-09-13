@@ -5,14 +5,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
 import { StatisticsComponent } from './statistics.component';
-import { StatisticsService } from './statistics.service';
-import { CanvasService } from '../canvas/canvas.service';
+import { ModelsService } from '../services/models.service';
+import { DialogService } from '../services/dialog.service';
 
 @NgModule({
   declarations: [StatisticsComponent],
   providers: [
-    StatisticsService,
-    CanvasService
+    ModelsService,
+    DialogService,
   ],
   imports: [
     CommonModule,

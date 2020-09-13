@@ -1,9 +1,9 @@
 import { Component, AfterViewInit, Input } from '@angular/core';
 import { fromEvent, merge } from 'rxjs';
 import { switchMap, takeUntil, pairwise } from 'rxjs/operators';
-import { CanvasService } from './canvas.service';
-import { NeuralNetworkService } from '../neural-network/neural-network.service';
 import { StatisticsComponent } from '../statistics/statistics.component';
+import { DialogService } from '../services/dialog.service';
+import { ModelsService } from '../services/models.service';
 
 @Component({
   selector: 'app-canvas',
@@ -17,8 +17,8 @@ export class CanvasComponent implements AfterViewInit {
   private cx: CanvasRenderingContext2D | null = null;
 
   constructor(
-    private canvasService: CanvasService,
-    private neuralNetworkService: NeuralNetworkService
+    private modelsService: ModelsService,
+    private dialogService: DialogService,
   ) {}
 
   ngAfterViewInit(): void {
@@ -104,21 +104,6 @@ export class CanvasComponent implements AfterViewInit {
           };
         }
 
-        const padding = 40;
-
-        if (
-          (
-            positions.prevPos.x > this.width - padding || positions.prevPos.x < padding ||
-            positions.prevPos.y > this.height - padding ||  positions.prevPos.y < padding
-          ) || 
-          (
-            positions.currentPos.x > this.width - padding || positions.currentPos.x < padding ||
-            positions.currentPos.y > this.height - padding ||  positions.currentPos.y < padding
-          )
-        ) {
-          return;
-        }
-
         // this method we'll implement soon to do the actual drawing
         this.drawOnCanvas(positions.prevPos, positions.currentPos);
       });
@@ -156,13 +141,13 @@ export class CanvasComponent implements AfterViewInit {
       return;
     }
 
-    this.neuralNetworkService.closeAllModals();
-    this.canvasService
+    this.dialogService.closeAllModals();
+    this.modelsService
       .sendImagesToPredict(this.cx.canvas.toDataURL())
       .subscribe((data) => {
-        this.canvasService.setPredictions(data.predictions);
-        this.canvasService.setLabels(data.labels);
-        this.neuralNetworkService.openModal(StatisticsComponent, ['statistics-dialog']);
+        this.modelsService.setPredictions(data.predictions);
+        this.modelsService.setLabels(data.labels);
+        this.dialogService.openModal(StatisticsComponent, ['statistics-dialog']);
       });
   }
 
