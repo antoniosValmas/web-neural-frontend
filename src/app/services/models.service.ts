@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
-import { GetCheckpointsResponseItem } from '../neural-network/neural-network.types';
+import {
+  GetCheckpointsResponseItem,
+  GetStatisticsResponse,
+} from '../neural-network/neural-network.types';
 import { SpinnerService } from './spinner.service';
 import { finalize } from 'rxjs/operators';
 import { PredictResponse } from '../canvas/canvas.types';
@@ -22,9 +25,11 @@ export class ModelsService {
 
   constructor(
     private http: HttpClient,
-    private spinnerService: SpinnerService,
+    private spinnerService: SpinnerService
   ) {
-    this.checkpointsPerModel = new BehaviorSubject<GetCheckpointsResponseItem[]>([]);
+    this.checkpointsPerModel = new BehaviorSubject<
+      GetCheckpointsResponseItem[]
+    >([]);
 
     this.predictionsObservable = new BehaviorSubject<number[][]>([]);
     this.labelsObservable = new BehaviorSubject<number[]>([]);
@@ -81,7 +86,7 @@ export class ModelsService {
   /**
    * Train neural network
    * You can start training from the selected checkpoint or start over.
-   * 
+   *
    * @param fromCheckpoint Start training from selected checkpoint
    * @param epochs The number of epochs the training will take
    */
@@ -90,7 +95,7 @@ export class ModelsService {
       epochs,
       checkpoint_id: fromCheckpoint && this.selectedCheckpoint,
       fromCheckpoint: fromCheckpoint,
-    })
+    });
   }
 
   public trainUserInput(imagesURL: string[], correctLabels: number[]) {
@@ -99,8 +104,8 @@ export class ModelsService {
       return {
         imageURL: url,
         label: correctLabels[index],
-      }
-    })
+      };
+    });
     return this.http
       .post(`/api/models/4/checkpoints/1/train/user-input`, body)
       .pipe(
@@ -119,7 +124,23 @@ export class ModelsService {
     this.spinnerService.setLoading(true);
     this.imagesURLObservable.next([url]);
     return this.http
-      .post<PredictResponse>(`/api/models/${this.selectedModel}/checkpoints/${this.selectedCheckpoint}/predict`, { url })
+      .post<PredictResponse>(
+        `/api/models/${this.selectedModel}/checkpoints/${this.selectedCheckpoint}/predict`,
+        { url }
+      )
+      .pipe(
+        finalize(() => {
+          this.spinnerService.setLoading(false);
+        })
+      );
+  }
+
+  public getStatistics(model_id: number, checkpoint_id: number) {
+    this.spinnerService.setLoading(true);
+    return this.http
+      .get<GetStatisticsResponse>(
+        `/api/models/${this.selectedModel}/checkpoints/${this.selectedCheckpoint}/statistics`
+      )
       .pipe(
         finalize(() => {
           this.spinnerService.setLoading(false);
@@ -132,12 +153,15 @@ export class ModelsService {
    */
   private initCheckpointsPerModel() {
     this.spinnerService.setLoading(true);
-    return this.http.get<GetCheckpointsResponseItem[]>('/api/models/checkpoints').pipe(
-      finalize(() => {
-        this.spinnerService.setLoading(false);
-      })
-    ).subscribe((data) => {
-      this.checkpointsPerModel.next(data);
-    });
+    return this.http
+      .get<GetCheckpointsResponseItem[]>('/api/models/checkpoints')
+      .pipe(
+        finalize(() => {
+          this.spinnerService.setLoading(false);
+        })
+      )
+      .subscribe((data) => {
+        this.checkpointsPerModel.next(data);
+      });
   }
 }

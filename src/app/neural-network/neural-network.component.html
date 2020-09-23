@@ -1,5 +1,5 @@
 <div class="container">
-  <mat-form-field matNativeControl>
+  <mat-form-field matNativeControl class="checkpoint-select">
     <mat-label>Choose a checkpoint</mat-label>
     <mat-select>
       <mat-optgroup *ngFor="let model of checkpointsPerModel" [label]="model.model_name + '(id: ' + model.model_id + ')'" >
@@ -8,7 +8,7 @@
           [value]="checkpoint.checkpoint_id"
           (onSelectionChange)="onSelectionChange($event, model.model_id, checkpoint.checkpoint_id)"
         >
-          Id: {{checkpoint.checkpoint_id}}, Acc: {{checkpoint.accuracy}} {{checkpoint.created_at}}
+          {{checkpoint.created_at}}
         </mat-option>
         <mat-option
           [value]="-1"
@@ -27,6 +27,62 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
+  <mat-accordion class="statistics-container">
+    <mat-expansion-panel [disabled]="true">
+      <mat-expansion-panel-header class="accordion-header">
+        <mat-panel-title>
+          <h2 class="accordion-title">Statistics</h2>
+        </mat-panel-title>
+        <mat-panel-description class="accordion-description">
+          {{checkpointDescription}}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+    </mat-expansion-panel>
+    <mat-expansion-panel class="training-statistics">
+      <mat-expansion-panel-header>
+        Training Statistics
+      </mat-expansion-panel-header>
+      <div class="training-accuracy">
+        <canvas 
+          baseChart
+          [datasets]="trainingData"
+          [labels]="labels"
+          [options]="chartOptions"
+          [legend]="true"
+          [chartType]="'line'"
+        ></canvas>
+      </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel class="evaluation-statistics">
+      <mat-expansion-panel-header>
+        Evaluation Statistics
+      </mat-expansion-panel-header>
+      <div mat-card-content class="evaluation-statistics-content">
+        <div class="evaluation-accuracy">
+          <small class="percentage">{{statistics.evaluation_acc.toFixed(2)}} %</small>
+          <div class="background"></div>
+          <mat-spinner
+            class="spinner"
+            [diameter]="200"
+            [color]="'accent'"
+            [mode]="'determinate'"
+            [value]="parseEvaluationAccuracy(statistics.evaluation_acc)"
+          ></mat-spinner>
+        </div>
+        <div class="evaluation-loss">
+          <small class="percentage">{{statistics.evaluation_loss.toFixed(4)}}</small>
+          <div class="background"></div>
+          <mat-spinner
+            class="spinner"
+            [diameter]="200"
+            [color]="'accent'"
+            [mode]="'determinate'"
+            [value]="parseEvaluationLoss(statistics.evaluation_loss)"
+          ></mat-spinner>
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
   <button
     mat-flat-button
     color="primary"

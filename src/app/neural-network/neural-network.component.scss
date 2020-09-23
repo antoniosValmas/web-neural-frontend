@@ -1,0 +1,74 @@
+.container {
+  h2, h3 {
+    text-align: center;
+  }
+
+  .checkpoint-select {
+    width: 300px;
+    margin: 20px auto;
+    display: block;
+  }
+  
+  
+  .statistics-container {
+    width: 80%;
+    display: block;
+    margin: auto;
+    
+    .accordion-header {
+      display: flex;
+      flex-wrap: wrap;
+    }
+  
+    .accordion-title, .accordion-description {
+      margin: auto 0;
+      height: fit-content;
+      color: black;
+    }
+    
+    .training-statistics, .evaluation-statistics {
+      margin: 0;
+    }
+
+    .evaluation-statistics-content {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      .evaluation-accuracy, .evaluation-loss {
+        position: relative;
+        margin: 30px 0;
+
+        .background {
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          border: 20px solid;
+          border-color: #ff408140;
+          border-radius: 100%;
+        }
+
+        .percentage {
+          width: fit-content;
+          height: fit-content;
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          margin: auto;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .container {
+    .statistics-container {
+      width: 100%;
+
+    }
+  }
+}
